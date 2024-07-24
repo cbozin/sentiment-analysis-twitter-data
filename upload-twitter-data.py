@@ -1,4 +1,3 @@
-import pandas as pd
 from google.cloud import storage
 
 def read_csv_files_from_bucket(bucket_name):
@@ -9,23 +8,17 @@ def read_csv_files_from_bucket(bucket_name):
     storage_client = storage.Client()
 
     # Get bucket
-    bucket = storage_client.bucket(bucket_name)
-
+    bucket = storage_client.bucket(bucket_name
     destination_prefix = "weird_index/"
 
-    # Use glob to find all CSV files in the bucket
+    # find all CSV files in the bucket
     itr = 0
     blob_prefix = 'long/'
     blobs = bucket.list_blobs(prefix=blob_prefix)
-    # print("Blobs:")
-    # for blob in blobs:
-    #     print(blob.name)
-    #     itr += 1
-    # print(itr)
 
     for blob in blobs:
         with blob.open("r") as f:
-            # num_cols = len(f.readline().split(","))
+
             line = f.readline().split(",")
             if '"extractedts"' in line:
                 col = '"extractedts"'
@@ -38,10 +31,6 @@ def read_csv_files_from_bucket(bucket_name):
             else:
                 idx_dict[idx] = 1
 
-        #     if num_cols in col_sz_dict.keys():
-        #         col_sz_dict[num_cols] += 1
-        #     else:
-        #         col_sz_dict[num_cols] = 1
         if idx == 17:
         
          #   Construct new blob name with destination prefix
@@ -55,12 +44,7 @@ def read_csv_files_from_bucket(bucket_name):
                 blob.delete()
 
                 print(f"Moved {blob.name} to {new_blob_name}")
-        # # Read CSV file
-        # # csv_content = blob.download_as_string().decode('utf-8')
-        
-        # # # Process CSV content (example: print the content)
-        # # print(csv_content)
-   # print(col_sz_dict)
+
     print(idx_dict)
 
 
